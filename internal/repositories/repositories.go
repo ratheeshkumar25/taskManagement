@@ -12,7 +12,7 @@ type TaskRepository struct {
 	DB *gorm.DB
 }
 
-// GetUserByUsername
+// GetUserByUsername services
 func (t *TaskRepository) GetUserByUsername(usename string) (*models.Users, error) {
 	var user models.Users
 
