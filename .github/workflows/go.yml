@@ -18,7 +18,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.23'  # ✅ Corrected Go version format
+          go-version: '1.23'
 
       - name: Install Dependencies
         run: go mod tidy
@@ -36,34 +36,27 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Debug Docker Username
-        run: |
-          echo "Docker Username: '${{ secrets.DOCKER_USERNAME }}'"
-
       - name: Log in to Docker Hub
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker Image
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          PORT: ${{ secrets.PORT }}
-          JWTKEY: ${{ secrets.JWTKEY }}
-          REDISHOST: ${{ secrets.REDISHOST }}
-          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      - name: Create .env file
         run: |
-          docker build -t "${{ secrets.DOCKER_USERNAME }}/task-management:v1.0" \
-            --build-arg DATABASE_URL="$DATABASE_URL" \
-            --build-arg PORT="$PORT" \
-            --build-arg JWTKEY="$JWTKEY" \
-            --build-arg REDISHOST="$REDISHOST" \
-            --build-arg REDIS_PASSWORD="$REDIS_PASSWORD" .
+          echo "JWTKEY=${{ secrets.JWTKEY }}" >> .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+          echo "PORT=${{ secrets.PORT }}" >> .env
+          echo "REDISHOST=${{ secrets.REDISHOST }}" >> .env
+          echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
 
-      - name: Push Docker Image to Docker Hub
-        run: docker push "${{ secrets.DOCKER_USERNAME }}/task-management:v1.0"
+      - name: Build and push Docker image
+        run: |
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/task-management:v1.0"
+          echo "🚀 Building and pushing Docker image: $IMAGE_NAME"
+          
+          docker build -t "$IMAGE_NAME" .
+          docker push "$IMAGE_NAME"
 
   deploy:
     needs: docker-build-and-push
