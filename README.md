@@ -82,4 +82,4 @@ The project has a CI/CD pipeline configured to automate testing and deployment.
 
 License
 
-MIT License
+MIT LicenseTrigger CI/CD
