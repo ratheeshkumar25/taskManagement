@@ -47,7 +47,7 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "JWTKEY=${{ secrets.JWTKEY }}" >> .env
+          echo "JWTKEY=${{ secrets.JWTKEY }}" > .env
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
           echo "PORT=${{ secrets.PORT }}" >> .env
           echo "REDISHOST=${{ secrets.REDISHOST }}" >> .env
