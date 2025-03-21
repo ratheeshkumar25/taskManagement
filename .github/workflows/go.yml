@@ -19,7 +19,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.23.1'
+          go-version: '1.23'  # Fix Go version
 
       - name: Install Dependencies
         run: go mod tidy
@@ -43,7 +43,6 @@ jobs:
 
       - name: Build Docker Image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/task_management:v1.0 .
- .
 
       - name: Push Docker Image to Docker Hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/task_management:v1.0
@@ -55,4 +54,3 @@ jobs:
     steps:
       - name: Trigger Render Deployment
         run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
-
