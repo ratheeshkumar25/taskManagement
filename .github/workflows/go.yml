@@ -1,68 +1,147 @@
 name: CI/CD Pipeline
 
 on:
+
   push:
+
     branches:
+
       - main
+
   pull_request:
+
     branches:
+
       - main
 
 jobs:
+
   build-and-test:
+
     runs-on: ubuntu-latest
+
     steps:
+
       - name: Checkout Repository
+
         uses: actions/checkout@v4
+
         
+
       - name: Set up Go
+
         uses: actions/setup-go@v4
+
         with:
+
           go-version: '1.23'
+
         
+
       - name: Install Dependencies
+
         run: go mod tidy
+
         
+
       - name: Build
+
         run: go build -v ./...
+
         
+
       - name: Run Tests
+
         run: go test -v ./... -cover
 
   docker-build-and-push:
+
     needs: build-and-test
+
     runs-on: ubuntu-latest
+
     steps:
+
       - name: Checkout Repository
+
         uses: actions/checkout@v4
+
         
+
       - name: Log in to Docker Hub
+
         uses: docker/login-action@v2
+
         with:
+
           username: ${{ secrets.DOCKER_USERNAME }}
+
           password: ${{ secrets.DOCKER_PASSWORD }}
+
         
+
       - name: Create .env file
+
         run: |
+
           echo "JWTKEY=${{ secrets.JWTKEY }}" > .env
+
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+
           echo "PORT=${{ secrets.PORT }}" >> .env
+
           echo "REDISHOST=${{ secrets.REDISHOST }}" >> .env
+
           echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
-        
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/task_management:v1.0
+
+      
+
+      - name: Debug Docker Username
+
+        run: |
+
+          # Print length of username to check if it's empty without exposing it
+
+          if [ -n "${{ secrets.DOCKER_USERNAME }}" ]; then
+
+            echo "DOCKER_USERNAME is set and has length: ${#DOCKER_USERNAME}"
+
+            # Create a safe version for demonstration
+
+            SAFE_USERNAME=$(echo "${{ secrets.DOCKER_USERNAME }}" | cut -c1-2)
+
+            echo "First two characters: ${SAFE_USERNAME}**"
+
+          else
+
+            echo "DOCKER_USERNAME is empty or not set!"
+
+          fi
+
+        env:
+
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+
+          
+
+      - name: Build and push Docker image with explicit username
+
+        run: |
+
+          docker build -t ratheeshku/task_management:v1.0 .
+
+          docker push ratheeshku/task_management:v1.0
+
+          
 
   deploy:
+
     needs: docker-build-and-push
+
     runs-on: ubuntu-latest
+
     steps:
+
       - name: Trigger Render Deployment
+
         run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
