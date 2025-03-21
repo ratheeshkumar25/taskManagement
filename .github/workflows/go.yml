@@ -18,7 +18,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.23'  # ✅ Fixed Go version format
+          go-version: '1.23'  # ✅ Corrected Go version format
 
       - name: Install Dependencies
         run: go mod tidy
@@ -37,20 +37,30 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Debug Docker Username
-        run: echo "Docker Username: ${{ secrets.DOCKER_USERNAME }}"  
+        run: |
+          echo "Docker Username: '${{ secrets.DOCKER_USERNAME }}'"
 
       - name: Log in to Docker Hub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
       - name: Build Docker Image
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PORT: ${{ secrets.PORT }}
+          JWTKEY: ${{ secrets.JWTKEY }}
+          REDISHOST: ${{ secrets.REDISHOST }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
         run: |
           docker build -t "${{ secrets.DOCKER_USERNAME }}/task-management:v1.0" \
-            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-            --build-arg PORT="${{ secrets.PORT }}" \
-            --build-arg JWTKEY="${{ secrets.JWTKEY }}" \
-            --build-arg REDISHOST="${{ secrets.REDISHOST }}" \
-            --build-arg REDIS_PASSWORD="${{ secrets.REDIS_PASSWORD }}" .
+            --build-arg DATABASE_URL="$DATABASE_URL" \
+            --build-arg PORT="$PORT" \
+            --build-arg JWTKEY="$JWTKEY" \
+            --build-arg REDISHOST="$REDISHOST" \
+            --build-arg REDIS_PASSWORD="$REDIS_PASSWORD" .
 
       - name: Push Docker Image to Docker Hub
         run: docker push "${{ secrets.DOCKER_USERNAME }}/task-management:v1.0"
