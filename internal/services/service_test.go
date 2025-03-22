@@ -10,6 +10,7 @@ import (
 	"github.com/ratheeshkumar25/task-mgt/internal/models"
 	"github.com/ratheeshkumar25/task-mgt/internal/services"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 )
 
 func TestCreateUser(t *testing.T) {
@@ -20,8 +21,13 @@ func TestCreateUser(t *testing.T) {
 	logger := log.Default()
 	service := services.NewTaskService(repoMock, nil, logger)
 
-	user := &models.Users{Username: "testuser", PasswordHash: "password"}
-	repoMock.EXPECT().CreateUser(user).Return(nil)
+	user := &models.Users{Username: "testuser@example.com", PasswordHash: "password"}
+
+	// Mock `GetUserByUsername` to return nil (user not found)
+	repoMock.EXPECT().GetUserByUsername(user.Username).Return(nil, gorm.ErrRecordNotFound)
+
+	// Mock `CreateUser`
+	repoMock.EXPECT().CreateUser(gomock.Any()).Return(nil)
 
 	err := service.CreateUser(user)
 	assert.NoError(t, err)
@@ -35,11 +41,26 @@ func TestCreateUser_Fail(t *testing.T) {
 	logger := log.Default()
 	service := services.NewTaskService(repoMock, nil, logger)
 
-	user := &models.Users{Username: "testuser", PasswordHash: "password"}
-	repoMock.EXPECT().CreateUser(user).Return(errors.New("db error"))
+	user := &models.Users{Username: "testuser@example.com", PasswordHash: "password"}
 
+	// First mock GetUserByUsername - return "not found" error
+	repoMock.EXPECT().
+		GetUserByUsername(user.Username).
+		Return(nil, errors.New("user not found")).
+		Times(1)
+
+	// Then mock CreateUser - return database error
+	repoMock.EXPECT().
+		CreateUser(gomock.Any()).
+		Return(errors.New("db error")).
+		Times(1)
+
+	// Run the test
 	err := service.CreateUser(user)
+
+	// Assert the expected error occurs
 	assert.Error(t, err)
+	assert.Equal(t, "db error", err.Error())
 }
 
 func TestLoginUser_InvalidCredentials(t *testing.T) {
