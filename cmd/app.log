@@ -15,3 +15,48 @@ LOG: 2025/03/21 21:13:03 di.go:34: Starting Task Management API Server...
 LOG: 2025/03/21 21:20:13 di.go:37: Starting Task Management API Server...
 LOG: 2025/03/21 22:20:57 di.go:34: Starting Task Management API Server...
 LOG: 2025/03/21 22:30:25 di.go:35: Starting Task Management API Server...
+LOG: 2025/03/22 03:20:57 di.go:40: Starting Task Management API Server...🔥
+LOG: 2025/03/22 03:31:56 di.go:36: Starting Task Management API Server...🔥
+LOG: 2025/03/22 03:37:23 di.go:36: Starting Task Management API Server...🔥
+LOG: 2025/03/22 03:40:18 di.go:36: Starting Task Management API Server...🔥
+LOG: 2025/03/22 03:58:09 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:00:19 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:08:56 di.go:16: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:09:01 di.go:24: failed to connect to redis: failed to connect to redis: context deadline exceeded
+LOG: 2025/03/22 04:10:16 di.go:16: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:10:21 di.go:24: failed to connect to redis: failed to connect to redis: context deadline exceeded
+LOG: 2025/03/22 04:11:15 di.go:36: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:11:20 di.go:44: failed to connect to redis: failed to connect to redis: context deadline exceeded
+LOG: 2025/03/22 04:12:19 di.go:36: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:12:24 di.go:44: failed to connect to redis: failed to connect to redis: context deadline exceeded
+LOG: 2025/03/22 04:18:32 di.go:36: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:18:37 di.go:44: failed to connect to redis: ❌ Failed to connect to Redis: context deadline exceeded
+LOG: 2025/03/22 04:26:29 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:26:34 di.go:23: failed to connect to redis: ❌ Failed to connect to Redis: context deadline exceeded
+LOG: 2025/03/22 04:26:54 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:27:04 di.go:23: failed to connect to redis: ❌ Failed to connect to Redis: context deadline exceeded
+LOG: 2025/03/22 04:27:16 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:27:36 di.go:23: failed to connect to redis: ❌ Failed to connect to Redis: dial tcp: lookup skilled-marten-38247.upstash.io: i/o timeout
+LOG: 2025/03/22 04:31:28 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:31:48 di.go:23: failed to connect to redis: ❌ Failed to connect to Redis: dial tcp: lookup skilled-marten-38247.upstash.io: i/o timeout
+LOG: 2025/03/22 04:33:09 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:33:29 di.go:23: failed to connect to redis: ❌ Failed to connect to Redis: dial tcp: lookup skilled-marten-38247.upstash.io: i/o timeout
+LOG: 2025/03/22 04:39:53 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:40:13 di.go:23: failed to connect to redis: ❌ Failed to connect to Redis: dial tcp: lookup skilled-marten-38247.upstash.io: i/o timeout
+LOG: 2025/03/22 04:41:14 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:41:34 di.go:23: failed to connect to redis: ❌ Failed to connect to Redis: dial tcp: lookup skilled-marten-38247.upstash.io: i/o timeout
+LOG: 2025/03/22 04:44:47 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:45:07 di.go:23: failed to connect to redis: ❌ Failed to connect to Redis: dial tcp: lookup skilled-marten-38247.upstash.io: i/o timeout
+LOG: 2025/03/22 04:46:05 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:46:10 di.go:23: failed to connect to redis: failed to connect to redis: context deadline exceeded
+LOG: 2025/03/22 04:48:32 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:48:37 di.go:23: failed to connect to redis: failed to connect to redis: context deadline exceeded
+LOG: 2025/03/22 04:49:48 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:49:53 di.go:23: failed to connect to redis: failed to connect to redis: context deadline exceeded
+LOG: 2025/03/22 04:51:04 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 04:51:09 di.go:23: failed to connect to redis: failed to connect to redis: context deadline exceeded
+LOG: 2025/03/22 04:57:21 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 05:02:54 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 05:12:10 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 05:29:15 di.go:15: Starting Task Management API Server...🔥
+LOG: 2025/03/22 05:29:20 di.go:23: failed to connect to redis: failed to connect to redis: context deadline exceeded

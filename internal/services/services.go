@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"regexp"
 	"sync"
 	"time"
 
@@ -20,6 +21,28 @@ type TaskServices struct {
 	Repo   repoIface.TaskRepoInter
 	redis  *config.RedisService
 	Logger *log.Logger
+}
+
+// Regular expression for email validation
+var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+
+// CreateUser: Registers a new user
+func (t *TaskServices) CreateUser(user *models.Users) error {
+	if !emailRegex.MatchString(user.Username) {
+		return errors.New("invalid email format")
+	}
+
+	// Check if user already exists
+	existingUser, _ := t.Repo.GetUserByUsername(user.Username)
+	if existingUser != nil {
+		return errors.New("email already exists, please proceed with login")
+	}
+	hash, err := bcrypt.GenerateFromPassword([]byte(user.PasswordHash), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	user.PasswordHash = string(hash)
+	return t.Repo.CreateUser(user)
 }
 
 // LoginUser: Authenticates user and generates JWT token
@@ -39,16 +62,6 @@ func (t *TaskServices) LoginUser(username string, password string) (string, erro
 		return "", err
 	}
 	return token, nil
-}
-
-// CreateUser: Registers a new user
-func (t *TaskServices) CreateUser(user *models.Users) error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(user.PasswordHash), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-	user.PasswordHash = string(hash)
-	return t.Repo.CreateUser(user)
 }
 
 // CreateTask: Creates a task and clears Redis cache asynchronously

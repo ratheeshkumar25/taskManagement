@@ -14,10 +14,12 @@ type RedisService struct {
 	Client *redis.Client
 }
 
+// Production
 func SetupRedis(cfg *Config) (*RedisService, error) {
+
 	client := redis.NewClient(&redis.Options{
 		Addr:      cfg.REDISHOST,
-		Password:  cfg.REDIS_PASSWORD, // Add password for authentication
+		Password:  cfg.REDIS_PASSWORD,
 		DB:        0,
 		TLSConfig: &tls.Config{},
 	})
@@ -35,6 +37,7 @@ func SetupRedis(cfg *Config) (*RedisService, error) {
 	}, nil
 }
 
+// local developement test
 // func SetupRedis(cfg *Config) (*RedisService, error) {
 // 	client := redis.NewClient(&redis.Options{
 // 		Addr: cfg.REDISHOST,

@@ -39,18 +39,6 @@ func NewTaskHandler(router *gin.RouterGroup, svc inter.TaskServiceInter, secret 
 	}
 }
 
-// RegisterUser godoc
-// @Summary Register a new user
-// @Description Registers a new user with username, email, and password
-// @Tags Auth
-// @Accept json
-// @Produce json
-// @Param input body models.RegisterRequest true "User registration details"
-// @Success 201 {object} models.RegisterResponse
-// @Failure 400 {object} models.ErrorResponse
-// @Failure 500 {object} models.ErrorResponse
-// @Router /api/v1/register [post]
-
 func (h *TaskHandler) Register(c *gin.Context) {
 	var user models.Users
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -58,23 +46,11 @@ func (h *TaskHandler) Register(c *gin.Context) {
 		return
 	}
 	if err := h.SVC.CreateUser(&user); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to register user"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{"message": "user registered successfully"})
 }
-
-// LoginUser godoc
-// @Summary Login user
-// @Description Authenticates user and returns JWT token
-// @Tags Auth
-// @Accept json
-// @Produce json
-// @Param input body models.LoginRequest true "User login details"
-// @Success 200 {object} models.LoginResponse
-// @Failure 400 {object} models.ErrorResponse
-// @Failure 401 {object} models.ErrorResponse
-// @Router /api/v1/login [post]
 
 func (h *TaskHandler) Login(c *gin.Context) {
 	var loginData struct {
@@ -93,19 +69,6 @@ func (h *TaskHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
 
-// CreateTask godoc
-// @Summary Create a task
-// @Description Create a new task for the authenticated user
-// @Tags Task
-// @Security ApiKeyAuth
-// @Accept json
-// @Produce json
-// @Param input body models.CreateTaskRequest true "Task details"
-// @Success 201 {object} models.TaskResponse
-// @Failure 400 {object} models.ErrorResponse
-// @Failure 401 {object} models.ErrorResponse
-// @Router /api/v1/tasks [post]
-
 func (h *TaskHandler) CreateTask(c *gin.Context) {
 	var task models.Task
 	if err := c.ShouldBindJSON(&task); err != nil || task.Title == "" || !models.IsValidStatus(task.Status) {
@@ -120,17 +83,6 @@ func (h *TaskHandler) CreateTask(c *gin.Context) {
 	}
 	c.JSON(http.StatusCreated, task)
 }
-
-// GetAllTasks godoc
-// @Summary Get all tasks
-// @Description Get all tasks created by the authenticated user
-// @Tags Task
-// @Security ApiKeyAuth
-// @Produce json
-// @Success 200 {array} models.TaskResponse
-// @Failure 401 {object} models.ErrorResponse
-// @Failure 500 {object} models.ErrorResponse
-// @Router /api/v1/tasks [get]
 
 func (h *TaskHandler) GetAllTasks(c *gin.Context) {
 	// Read query params
@@ -178,19 +130,6 @@ func (h *TaskHandler) GetAllTasks(c *gin.Context) {
 	})
 }
 
-// GetTaskByID godoc
-// @Summary Get task by ID
-// @Description Get a specific task by its ID
-// @Tags Task
-// @Security ApiKeyAuth
-// @Produce json
-// @Param id path int true "Task ID"
-// @Success 200 {object} models.TaskResponse
-// @Failure 400 {object} models.ErrorResponse
-// @Failure 401 {object} models.ErrorResponse
-// @Failure 404 {object} models.ErrorResponse
-// @Router /api/v1/tasks/{id} [get]
-
 func (h *TaskHandler) GetTaskByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -204,21 +143,6 @@ func (h *TaskHandler) GetTaskByID(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, task)
 }
-
-// UpdateTask godoc
-// @Summary Update a task
-// @Description Update a task by its ID
-// @Tags Task
-// @Security ApiKeyAuth
-// @Accept json
-// @Produce json
-// @Param id path int true "Task ID"
-// @Param input body models.UpdateTaskRequest true "Updated task details"
-// @Success 200 {object} models.TaskResponse
-// @Failure 400 {object} models.ErrorResponse
-// @Failure 401 {object} models.ErrorResponse
-// @Failure 404 {object} models.ErrorResponse
-// @Router /api/v1/tasks/{id} [put]
 
 func (h *TaskHandler) UpdateTask(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
@@ -235,19 +159,6 @@ func (h *TaskHandler) UpdateTask(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, task)
 }
-
-// DeleteTask godoc
-// @Summary Delete a task
-// @Description Delete a task by its ID
-// @Tags Task
-// @Security ApiKeyAuth
-// @Produce json
-// @Param id path int true "Task ID"
-// @Success 200 {object} models.SuccessResponse
-// @Failure 400 {object} models.ErrorResponse
-// @Failure 401 {object} models.ErrorResponse
-// @Failure 404 {object} models.ErrorResponse
-// @Router /api/v1/tasks/{id} [delete]
 
 func (h *TaskHandler) DeleteTask(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
