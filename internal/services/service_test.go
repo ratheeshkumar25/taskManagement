@@ -13,6 +13,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Create user test case
 func TestCreateUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -63,6 +64,7 @@ func TestCreateUser_Fail(t *testing.T) {
 	assert.Equal(t, "db error", err.Error())
 }
 
+// LOgin  user test case
 func TestLoginUser_InvalidCredentials(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
